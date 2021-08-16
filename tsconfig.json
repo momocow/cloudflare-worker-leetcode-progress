@@ -1,0 +1,20 @@
+{
+    "compilerOptions": {
+        "declaration": true,
+        "outDir": "dist",
+        "esModuleInterop": true,
+        "moduleResolution": "node",
+        "experimentalDecorators": true,
+        "strict": true,
+        "lib": [
+            "ES2019",
+            "WebWorker"
+        ],
+        "module": "ES6",
+        "target": "ES2019"
+    },
+    "include": [
+        "lib",
+        "index.ts"
+    ]
+}

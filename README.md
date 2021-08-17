@@ -6,6 +6,11 @@
 
 [![MomoCow's LeetCode Progress](https://x.cow.moe/leetcode-progress/?username=momocow)](https://leetcode.com/momocow/)
 
+## Installation
+```
+npm i @momocow/cloudflare-worker-leetcode-progress
+```
+
 ## Usage
 
 ```js

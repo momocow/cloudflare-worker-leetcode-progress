@@ -35,7 +35,7 @@
     "webpack-node-externals": "^3.0.0"
   },
   "name": "@momocow/cloudflare-worker-leetcode-progress",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "main": "dist/index.js",
   "files": [
     "lib",

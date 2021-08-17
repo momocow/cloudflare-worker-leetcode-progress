@@ -2,6 +2,10 @@
 
 > Generate LeetCode progress as a SVG deployed on Cloudflare Workers.
 
+## Demo
+
+[![MomoCow's LeetCode Progress](https://x.cow.moe/leetcode-progress/?username=momocow)](https://leetcode.com/momocow/)
+
 ## Usage
 
 ```js

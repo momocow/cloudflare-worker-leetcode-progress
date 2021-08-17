@@ -168,7 +168,7 @@ export async function processEtagHeader(
 ): Promise<Response> {
   const etag = await etagPromise;
   if (etag) {
-    response.headers.append('ETag', etag);
+    response.headers.set('ETag', etag);
   }
   return response;
 }
@@ -181,13 +181,13 @@ export function processHeaders(
   const now = new Date();
   const expires = new Date(now.getTime() + cacheTTL);
 
-  response.headers.append('Content-Type', 'image/svg+xml');
-  response.headers.append('Cache-Control', `public, max-age=${maxage}`);
-  response.headers.append('Last-Modified', now.toUTCString());
-  response.headers.append('Expires', expires.toUTCString());
+  response.headers.set('Content-Type', 'image/svg+xml');
+  response.headers.set('Cache-Control', `public, max-age=${maxage}`);
+  response.headers.set('Last-Modified', now.toUTCString());
+  response.headers.set('Expires', expires.toUTCString());
 
   if (cors) {
-    response.headers.append('Access-Control-Allow-Origin', '*');
+    response.headers.set('Access-Control-Allow-Origin', '*');
   }
 
   return response;

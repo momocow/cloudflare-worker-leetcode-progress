@@ -54,3 +54,4 @@ addEventListener('fetch', (event) => {
 ## Query String Parameters
 - `username`: string
 - `progress-type`: "global" | "session"
+- `theme`: "default" | "dark"

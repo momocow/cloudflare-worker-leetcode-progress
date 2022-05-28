@@ -1,5 +1,6 @@
 import { gql, GraphQLClient } from 'graphql-request';
 import pupa from 'pupa';
+import tplDark from './progress-dark.svg';
 import tpl from './progress.svg';
 
 export type ProgressType = 'global' | 'session';
@@ -100,4 +101,5 @@ export async function fetchProgress(
   };
 }
 
-export const renderProgress = pupa.bind(null, tpl);
+export const renderProgress = (theme: string) =>
+  pupa.bind(null, theme === 'dark' ? tplDark : tpl);

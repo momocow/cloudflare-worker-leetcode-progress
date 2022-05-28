@@ -56,6 +56,7 @@ export interface HandlerContext {
   url: string;
   username: string;
   progressType: ProgressType;
+  theme?: string;
 }
 
 export type CacheMatch = (
@@ -115,13 +116,14 @@ export function prepare(
   const url = normalizeURL(request.url, { progressType });
   const username = url.searchParams.get('username');
   const progType = url.searchParams.get('progress-type');
+  const theme = url.searchParams.get('theme') ?? undefined;
   if (!validateUsername(username) || !validateProgressType(progType)) {
     throw new BadRequest();
   }
   if (userlist && !userlist.has(username)) {
     throw new Forbidden();
   }
-  return { url: url.toString(), username, progressType: progType };
+  return { url: url.toString(), username, progressType: progType, theme };
 }
 
 export function useCache(
@@ -204,17 +206,18 @@ export function createGetHandler({
   fetch,
 }: HandleGetOptions = {}): RequestHandler {
   const boundPrepare = partialRight(prepare, [{ userlist, progressType }]);
-  const processResponse = pipeWith(andThen)([
-    partialRight(fetchProgress, [
-      { leetcodeGraphqlUrl, fetch },
-    ]) as UnaryFetchProgress,
-    renderProgress,
-    converge(processEtagHeader, [
-      createResponse,
-      partialRight(computeEtag, [{ hashAlgorithm }]),
-    ]),
-    partialRight(processHeaders, [{ cors, cacheTTL }]),
-  ]) as unknown as ProcessResponse;
+  const processResponse = (theme = 'default') =>
+    pipeWith(andThen)([
+      partialRight(fetchProgress, [
+        { leetcodeGraphqlUrl, fetch },
+      ]) as UnaryFetchProgress,
+      renderProgress(theme),
+      converge(processEtagHeader, [
+        createResponse,
+        partialRight(computeEtag, [{ hashAlgorithm }]),
+      ]),
+      partialRight(processHeaders, [{ cors, cacheTTL }]),
+    ]) as unknown as ProcessResponse;
 
   return async function handleGet(event: FetchEvent): Promise<Response> {
     const cache =
@@ -225,10 +228,10 @@ export function createGetHandler({
         : undefined;
 
     const [matchCache, putCache] = cache ? useCache(cache) : [];
-    const { url, username, progressType } = boundPrepare(event.request);
+    const { url, username, progressType, theme } = boundPrepare(event.request);
     let response = await matchCache?.(url, event.request.headers);
     if (response) return response;
-    response = await processResponse(username, progressType);
+    response = await processResponse(theme)(username, progressType);
     if (putCache) event.waitUntil(putCache(response.clone()));
     return response;
   };
